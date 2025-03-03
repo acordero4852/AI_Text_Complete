@@ -1,26 +1,26 @@
 /* styles/content.css */
 #ai-suggestion-box {
-    position: absolute;
-    border: 1px solid #ccc;
-    background: white;
-    padding: 5px 0;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    display: none;
-    z-index: 10000;
-    max-height: 200px;
-    overflow-y: auto;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 14px;
+  position: absolute;
+  border: 1px solid #ccc;
+  background: white;
+  padding: 5px 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 10000;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
 }
 
 .suggestion-item {
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .suggestion-item:hover,
 .suggestion-item.selected {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }

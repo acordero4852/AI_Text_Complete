@@ -1,242 +1,249 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>AI Text Completion</title>
     <style>
-        body {
-            width: 300px;
-            padding: 15px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
+      body {
+        width: 300px;
+        padding: 15px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+      }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
 
-        .status {
-            padding: 10px;
-            border-radius: 4px;
-            background: #f0f0f0;
-            margin-top: 10px;
-        }
+      .status {
+        padding: 10px;
+        border-radius: 4px;
+        background: #f0f0f0;
+        margin-top: 10px;
+      }
 
-        .api-key-section {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 4px;
-        }
+      .api-key-section {
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 4px;
+      }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 10px;
+      }
 
-        input[type="text"] {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
+      input[type='text'] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+      }
 
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
 
-        button:hover {
-            background-color: #45a049;
-        }
+      button:hover {
+        background-color: #45a049;
+      }
 
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
 
-        .error {
-            color: #ff0000;
-            font-size: 12px;
-            margin-top: 5px;
-        }
+      .error {
+        color: #ff0000;
+        font-size: 12px;
+        margin-top: 5px;
+      }
 
-        .success {
-            color: #4CAF50;
-            font-size: 12px;
-            margin-top: 5px;
-        }
+      .success {
+        color: #4caf50;
+        font-size: 12px;
+        margin-top: 5px;
+      }
 
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
+      .toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+      }
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 24px;
+      }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
+      .slider:before {
+        position: absolute;
+        content: '';
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
 
-        input:checked + .slider {
-            background-color: #4CAF50;
-        }
+      input:checked + .slider {
+        background-color: #4caf50;
+      }
 
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h2>AI Text Completion</h2>
-        
-        <div class="api-key-section">
-            <div class="input-group">
-                <label for="apiKey">OpenAI API Key:</label>
-                <input type="text" id="apiKey" placeholder="Enter your API key" />
-                <button id="saveKey">Save Key</button>
-                <span id="message"></span>
-            </div>
-        </div>
+      <h2>AI Text Completion</h2>
 
-        <div class="status">
-            <div>Status: <span id="status">Checking...</span></div>
-            <div class="toggle-container">
-                <label class="switch">
-                    <input type="checkbox" id="enableExtension" checked>
-                    <span class="slider"></span>
-                </label>
-                <span>Enable Extension</span>
-            </div>
+      <div class="api-key-section">
+        <div class="input-group">
+          <label for="apiKey">OpenAI API Key:</label>
+          <input type="text" id="apiKey" placeholder="Enter your API key" />
+          <button id="saveKey">Save Key</button>
+          <span id="message"></span>
         </div>
+      </div>
 
-        <div class="usage-info">
-            <h3>Quick Tips:</h3>
-            <ul>
-                <li>Type in any text field to see suggestions</li>
-                <li>Use ↑/↓ arrows to navigate suggestions</li>
-                <li>Press Enter to accept a suggestion</li>
-                <li>Press Esc to dismiss suggestions</li>
-            </ul>
+      <div class="status">
+        <div>Status: <span id="status">Checking...</span></div>
+        <div class="toggle-container">
+          <label class="switch">
+            <input type="checkbox" id="enableExtension" checked />
+            <span class="slider"></span>
+          </label>
+          <span>Enable Extension</span>
         </div>
+      </div>
+
+      <div class="usage-info">
+        <h3>Quick Tips:</h3>
+        <ul>
+          <li>Type in any text field to see suggestions</li>
+          <li>Use ↑/↓ arrows to navigate suggestions</li>
+          <li>Press Enter to accept a suggestion</li>
+          <li>Press Esc to dismiss suggestions</li>
+        </ul>
+      </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const apiKeyInput = document.getElementById('apiKey');
-            const saveKeyButton = document.getElementById('saveKey');
-            const messageSpan = document.getElementById('message');
-            const statusSpan = document.getElementById('status');
-            const enableSwitch = document.getElementById('enableExtension');
+      document.addEventListener('DOMContentLoaded', async () => {
+        const apiKeyInput = document.getElementById('apiKey');
+        const saveKeyButton = document.getElementById('saveKey');
+        const messageSpan = document.getElementById('message');
+        const statusSpan = document.getElementById('status');
+        const enableSwitch = document.getElementById('enableExtension');
 
-            // Load saved API key
-            chrome.storage.local.get(['openaiApiKey', 'extensionEnabled'], (result) => {
-                if (result.openaiApiKey) {
-                    apiKeyInput.value = result.openaiApiKey;
-                    statusSpan.textContent = 'Active';
-                    statusSpan.style.color = '#4CAF50';
-                }
-
-                enableSwitch.checked = result.extensionEnabled !== false;
-            });
-
-            // Save API key
-            saveKeyButton.addEventListener('click', () => {
-                const apiKey = apiKeyInput.value.trim();
-                
-                if (!apiKey) {
-                    messageSpan.textContent = 'Please enter an API key';
-                    messageSpan.className = 'error';
-                    return;
-                }
-
-                // Test the API key with a simple request
-                testApiKey(apiKey).then(isValid => {
-                    if (isValid) {
-                        chrome.storage.local.set({ openaiApiKey: apiKey }, () => {
-                            messageSpan.textContent = 'API key saved successfully!';
-                            messageSpan.className = 'success';
-                            statusSpan.textContent = 'Active';
-                            statusSpan.style.color = '#4CAF50';
-                        });
-                    } else {
-                        messageSpan.textContent = 'Invalid API key';
-                        messageSpan.className = 'error';
-                    }
-                });
-            });
-
-            // Toggle extension
-            enableSwitch.addEventListener('change', (e) => {
-                const enabled = e.target.checked;
-                chrome.storage.local.set({ extensionEnabled: enabled }, () => {
-                    statusSpan.textContent = enabled ? 'Active' : 'Disabled';
-                    statusSpan.style.color = enabled ? '#4CAF50' : '#ff0000';
-                });
-            });
-
-            // Test API key validity
-            async function testApiKey(apiKey) {
-                try {
-                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`
-                        },
-                        body: JSON.stringify({
-                            model: 'gpt-3.5-turbo',
-                            messages: [{ role: 'user', content: 'Test' }],
-                            max_tokens: 5
-                        })
-                    });
-                    const data = await response.json();
-                    return !data.error;
-                } catch (error) {
-                    return false;
-                }
+        // Load saved API key
+        chrome.storage.local.get(
+          ['openaiApiKey', 'extensionEnabled'],
+          (result) => {
+            if (result.openaiApiKey) {
+              apiKeyInput.value = result.openaiApiKey;
+              statusSpan.textContent = 'Active';
+              statusSpan.style.color = '#4CAF50';
             }
+
+            enableSwitch.checked = result.extensionEnabled !== false;
+          }
+        );
+
+        // Save API key
+        saveKeyButton.addEventListener('click', () => {
+          const apiKey = apiKeyInput.value.trim();
+
+          if (!apiKey) {
+            messageSpan.textContent = 'Please enter an API key';
+            messageSpan.className = 'error';
+            return;
+          }
+
+          // Test the API key with a simple request
+          testApiKey(apiKey).then((isValid) => {
+            if (isValid) {
+              chrome.storage.local.set({ openaiApiKey: apiKey }, () => {
+                messageSpan.textContent = 'API key saved successfully!';
+                messageSpan.className = 'success';
+                statusSpan.textContent = 'Active';
+                statusSpan.style.color = '#4CAF50';
+              });
+            } else {
+              messageSpan.textContent = 'Invalid API key';
+              messageSpan.className = 'error';
+            }
+          });
         });
+
+        // Toggle extension
+        enableSwitch.addEventListener('change', (e) => {
+          const enabled = e.target.checked;
+          chrome.storage.local.set({ extensionEnabled: enabled }, () => {
+            statusSpan.textContent = enabled ? 'Active' : 'Disabled';
+            statusSpan.style.color = enabled ? '#4CAF50' : '#ff0000';
+          });
+        });
+
+        // Test API key validity
+        async function testApiKey(apiKey) {
+          try {
+            const response = await fetch(
+              'https://api.openai.com/v1/chat/completions',
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                  model: 'gpt-3.5-turbo',
+                  messages: [{ role: 'user', content: 'Test' }],
+                  max_tokens: 5,
+                }),
+              }
+            );
+            const data = await response.json();
+            return !data.error;
+          } catch (error) {
+            return false;
+          }
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
